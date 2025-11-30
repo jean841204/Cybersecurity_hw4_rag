@@ -1,5 +1,8 @@
 # 📚 Google Books RAG 推薦系統
 
+## 🔗 Live Demo
+**👉 [https://cybersecurityhw4rag-jean.streamlit.app/](https://cybersecurityhw4rag-jean.streamlit.app/)**
+
 基於 RAG (Retrieval-Augmented Generation) 技術的智慧書籍推薦系統，使用完全免費的資源建構。
 
 ## ✨ 功能特色

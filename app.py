@@ -30,8 +30,8 @@ def get_llm():
         api_key = os.getenv("GROQ_API_KEY")
         if not api_key:
             try:
-                api_key = st.secrets.get("GROQ_API_KEY")
-            except:
+                api_key = st.secrets["GROQ_API_KEY"]
+            except Exception:
                 api_key = None
 
         llm = ChatGroq(

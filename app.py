@@ -55,7 +55,8 @@ def load_vectordb():
 
     vectordb = FAISS.load_local(
         "vectordb/faiss_index",
-        embeddings
+        embeddings,
+        allow_dangerous_deserialization=True  # 安全：我們自己建立的資料庫
     )
 
     return vectordb

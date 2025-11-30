@@ -1,29 +1,53 @@
+# Environment variables
+.env
+
 # Python
 __pycache__/
 *.py[cod]
 *$py.class
 *.so
 .Python
-venv/
 env/
+venv/
 ENV/
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+*.egg-info/
+.installed.cfg
+*.egg
 
-# Streamlit
-.streamlit/
+# Data files
+data/books_raw.json
 
-# IDE
+# Vector database (可選：如果太大可以 ignore)
+# vectordb/
+
+# Jupyter Notebook
+.ipynb_checkpoints
+
+# IDEs
 .vscode/
 .idea/
 *.swp
 *.swo
+*~
+
+# OS
 .DS_Store
+Thumbs.db
 
-# Temporary files
-*.tmp
-*.temp
+# Streamlit
+.streamlit/secrets.toml
 
-# Prediction outputs (如果不想推送預測結果)
-predict/
-
-# 模型檔案（如果太大，可以考慮用 Git LFS）
-# weight/*.pt
+# Logs
+*.log

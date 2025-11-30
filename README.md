@@ -1,176 +1,226 @@
-# 🔢 USPS 手寫數字辨識系統
+# 📚 Google Books RAG 推薦系統
 
-基於 YOLOv8 分類模型的手寫數字辨識 Web 應用程式，提供互動式的數字辨識體驗。
-
-## 🌐 線上 Demo
-
-**立即試用**: [https://cybersecurityhw4-jean.streamlit.app/](https://cybersecurityhw4-jean.streamlit.app/)
-
-無需安裝，直接在瀏覽器中體驗完整功能！
-
-## 📊 專案簡介
-
-本專案使用 **YOLOv8 Classification** 模型，在 USPS（United States Postal Service）手寫數字資料集上進行訓練。相較於常見的 MNIST 資料集，USPS 資料集來自真實郵件場景，包含更多自然書寫的變異性與挑戰性，因此更貼近實際應用情境。
-
-### 🎯 模型表現
-
-- **驗證準確率**: **96.56%**
-- **訓練資料集**: USPS (United States Postal Service Dataset)
-- **模型架構**: YOLOv8 Classification
-
-### 💡 關於準確率
-
-本模型在 USPS 資料集上的準確率（96.56%）相較於 MNIST 資料集稍低，主要原因在於：
-
-- **資料來源差異**: USPS 資料集收集自真實的美國郵政信件，包含各種不同書寫風格、字跡潦草、筆劃模糊等實際場景中的挑戰
-- **真實世界複雜度**: 真實郵件上的手寫數字往往受到書寫速度、書寫工具、紙張品質等因素影響，呈現更大的變異性
-- **實用性考量**: 雖然準確率稍低，但模型更能反映實際應用場景的辨識能力，具有更高的實用價值
+基於 RAG (Retrieval-Augmented Generation) 技術的智慧書籍推薦系統，使用完全免費的資源建構。
 
 ## ✨ 功能特色
 
-### 1. 📤 自訂圖片上傳
-- 支援多種圖片格式（PNG, JPG, JPEG, BMP）
-- 即時上傳並進行推論
-- 顯示 Top 5 預測結果及信心度
+- 🔍 智慧書籍搜尋與推薦
+- 🤖 使用 RAG 技術提供精準推薦
+- 💰 完全免費的技術棧
+- 🌏 支援繁體中文
+- 🚀 可免費部署至 Streamlit Cloud
 
-### 2. 📁 範例圖片測試
-- 內建手寫數字範例集（`data/` 資料夾）
-- 網格式瀏覽介面，方便快速選擇
-- 一鍵測試模型辨識效果
+## 🛠️ 技術架構
 
-### 3. ⚙️ 彈性參數調整
-- **信心度閾值調整**: 控制預測結果的可信度門檻（0.0 - 1.0）
-- **圖片尺寸設定**: 調整輸入圖片大小以優化推論速度與準確度
+| 組件 | 技術選擇 | 說明 |
+|------|---------|------|
+| **LLM** | HuggingFace / Google Gemini | 免費 API |
+| **Embedding** | sentence-transformers | 本地執行 |
+| **向量資料庫** | FAISS | 本地儲存 |
+| **資料來源** | Google Books API | 免費 |
+| **前端** | Streamlit | 免費部署 |
 
-### 4. 📊 詳細結果展示
-- 視覺化呈現原始圖片與預測結果
-- Top 5 預測類別及對應信心度百分比
-- 突出顯示最高信心度的預測結果
+## 📂 專案結構
+
+```
+books-rag-system/
+├── data_collection.py      # 從 Google Books API 收集資料
+├── build_vectordb.py       # 建立 FAISS 向量資料庫
+├── app.py                  # Streamlit 應用程式
+├── requirements.txt        # Python 套件
+├── .env.example           # 環境變數範例
+├── .gitignore
+├── README.md
+├── data/
+│   └── books_raw.json     # 原始書籍資料
+└── vectordb/
+    └── faiss_index/       # 向量資料庫
+```
 
 ## 🚀 快速開始
 
-### 環境需求
+### 1. 環境設定
 
-- Python 3.8 或以上版本
-- 建議使用虛擬環境
+```bash
+# 安裝套件
+pip install -r requirements.txt
 
-### 安裝步驟
-
-1. **Clone 或下載專案**
-   ```bash
-   cd /path/to/hw4
-   ```
-
-2. **（建議）創建虛擬環境**
-   ```bash
-   python -m venv venv
-
-   # macOS/Linux 啟動虛擬環境
-   source venv/bin/activate
-
-   # Windows 啟動虛擬環境
-   venv\Scripts\activate
-   ```
-
-3. **安裝所需套件**
-   ```bash
-   pip install -r requirements.txt
-   ```
-
-4. **執行 Streamlit 應用程式**
-   ```bash
-   streamlit run streamlit_app.py
-   ```
-
-5. **開啟瀏覽器**
-
-   應用程式會自動在瀏覽器中開啟，預設網址為 `http://localhost:8501`
-
-## 📁 專案結構
-
-```
-hw4/
-├── streamlit_app.py       # Streamlit Web 應用程式主程式
-├── inference_usps.py      # 原始推論腳本（批次處理）
-├── requirements.txt       # Python 套件依賴清單
-├── README.md             # 專案說明文件
-├── weight/
-│   └── best.pt           # YOLOv8 訓練好的模型權重檔
-└── data/
-    ├── inverted_0.png    # 手寫數字範例圖片
-    ├── inverted_1.png
-    ├── inverted_2.png
-    └── ...               # 更多範例圖片（數字 0-9）
+# 設定 API Key
+cp .env.example .env
+# 編輯 .env 檔案，填入你的 API Key
 ```
 
-## 🎮 使用說明
+### 2. 取得免費 API Key
 
-### 方法一：上傳自己的圖片
+#### 方案 A：HuggingFace（推薦）
 
-1. 點選 **「📤 上傳圖片」** 分頁
-2. 點擊上傳按鈕，選擇一張手寫數字圖片
-3. 點選 **「🚀 開始辨識」** 按鈕
-4. 查看辨識結果及信心度
+1. 註冊帳號：https://huggingface.co/join
+2. 前往設定：https://huggingface.co/settings/tokens
+3. 建立 "Read" token
+4. 複製 token（格式：`hf_xxxxx`）
 
-### 方法二：使用範例圖片
+**優點：**
+- 完全免費
+- 額度充足
+- 支援多種模型
 
-1. 點選 **「📁 選擇範例圖片」** 分頁
-2. 瀏覽顯示的範例圖片縮圖
-3. 點擊任一圖片下方的 **「選擇」** 按鈕
-4. 點選 **「🚀 開始辨識範例圖片」** 按鈕
-5. 查看辨識結果
+#### 方案 B：Google Gemini
 
-### 調整推論參數
+1. 前往：https://makersuite.google.com/app/apikey
+2. 建立 API Key
+3. 複製 API Key
 
-在左側邊欄可以調整：
-- **信心度閾值**: 建議值 0.3，數值越高代表模型需要更高的確定性才會輸出結果
-- **圖片大小**: 預設 32x32，與訓練時的圖片尺寸一致
+**優點：**
+- 每分鐘 60 requests
+- 中文支援好
+- 回應速度快
 
-## 🔧 技術棧
+### 3. 收集書籍資料
 
-- **深度學習框架**: [Ultralytics YOLOv8](https://github.com/ultralytics/ultralytics)
-- **Web 框架**: [Streamlit](https://streamlit.io/)
-- **圖片處理**: Pillow (PIL)
-- **數值計算**: NumPy
+```bash
+python data_collection.py
+```
 
-## 📈 模型訓練資訊
+這會從 Google Books API 收集約 200-300 本書籍資料，包含以下類別：
+- 小說、科幻、推理、愛情
+- 歷史、科普、商業
+- 自我成長、哲學、心理學
 
-- **模型**: YOLOv8n Classification
-- **資料集**: USPS Handwritten Digits
-  - 訓練集: 7,291 張圖片
-  - 測試集: 2,007 張圖片
-  - 類別: 10 個數字（0-9）
-- **圖片尺寸**: 32x32 像素
-- **驗證準確率**: 96.56%
+### 4. 建立向量資料庫
 
-## 📝 範例資料說明
+```bash
+python build_vectordb.py
+```
 
-`data/` 資料夾中的圖片為手寫數字範例集，包含數字 0-9 的手寫樣本。這些圖片經過預處理（反相處理），可直接用於測試模型的辨識能力。
+**注意：**
+- 第一次執行會下載 embedding 模型（約 400MB）
+- 只需執行一次
+- 執行時間約 5-10 分鐘
 
-## ⚠️ 注意事項
+### 5. 啟動應用程式
 
-1. **圖片格式建議**:
-   - 建議使用黑底白字的清晰手寫數字
-   - 圖片尺寸會自動調整為 32x32 像素
+```bash
+streamlit run app.py
+```
 
-2. **辨識效果**:
-   - 工整清晰的字跡會有較高的辨識準確率
-   - 過於潦草或模糊的數字可能影響辨識結果
+應用程式會在 http://localhost:8501 啟動。
 
-3. **環境相依性**:
-   - 確保已正確安裝 `requirements.txt` 中的所有套件
-   - Ultralytics YOLO 需要較新版本的 Python (>= 3.8)
+## 💡 使用方式
 
-## 🎓 學習資源
+1. 在輸入框輸入問題，例如：
+   - "推薦科幻小說"
+   - "有什麼商業書籍？"
+   - "適合初學者的心理學書"
 
-- [YOLOv8 官方文檔](https://docs.ultralytics.com/)
-- [Streamlit 官方教學](https://docs.streamlit.io/)
-- [USPS Dataset Information](http://www.cs.nyu.edu/~roweis/data.html)
+2. 點選「獲取推薦」按鈕
+
+3. AI 會：
+   - 推薦 2-3 本相關書籍
+   - 說明推薦理由
+   - 顯示書籍封面、作者、類別等資訊
+   - 提供預覽連結
+
+## 🌐 部署到 Streamlit Cloud
+
+### 步驟 1：準備專案
+
+```bash
+# 確保所有檔案都已提交
+git add .
+git commit -m "Add RAG book recommendation system"
+git push
+```
+
+### 步驟 2：部署
+
+1. 前往 https://share.streamlit.io/
+2. 登入 GitHub 帳號
+3. 選擇你的 repository
+4. Main file path: `app.py`
+5. 點選 Deploy
+
+### 步驟 3：設定 Secrets
+
+在 Streamlit Cloud 專案設定中，加入：
+
+```toml
+HUGGINGFACE_API_KEY = "hf_your_key"
+# 或
+GOOGLE_API_KEY = "your_key"
+```
+
+## ⚙️ 配置選項
+
+在 [app.py](app.py#L19) 中可以切換 LLM：
+
+```python
+# 選擇使用哪個 LLM（二選一）
+USE_LLM = "huggingface"  # 或 "gemini"
+```
+
+### HuggingFace 模型選項
+
+在 [app.py](app.py#L31) 中可以更換模型：
+
+```python
+repo_id="mistralai/Mistral-7B-Instruct-v0.2"  # 或 "google/flan-t5-xxl"
+```
+
+## 📊 系統資訊
+
+- **向量資料庫大小**：約 100-200MB
+- **載入時間**：3-5 秒
+- **問答回應時間**：5-10 秒
+- **免費額度**：
+  - HuggingFace：每小時約 1000 次請求
+  - Gemini：每分鐘 60 次請求
+
+## 🔧 疑難排解
+
+### Q: 建立向量資料庫時記憶體不足？
+
+A: 可以在 [data_collection.py](data_collection.py#L82) 中減少收集的書籍數量：
+
+```python
+books_per_category=20  # 改為較小的數字
+```
+
+### Q: HuggingFace 模型下載太慢？
+
+A: 可以換用較小的模型：
+
+```python
+repo_id="google/flan-t5-base"  # 較小但速度快
+```
+
+### Q: Streamlit Cloud 部署失敗？
+
+A: 確認：
+1. `vectordb/` 資料夾是否太大（可以在部署後重新建立）
+2. API Key 是否正確設定在 Secrets
+3. requirements.txt 中的套件版本是否相容
+
+### Q: 回答品質不理想？
+
+A: 可以調整 prompt 模板或切換到 Gemini：
+
+```python
+USE_LLM = "gemini"  # Gemini 中文支援較好
+```
+
+## 📝 開發紀錄
+
+- 專案建立：2025-11-29
+- 使用技術：RAG, FAISS, LangChain, Streamlit
+- 目標：完全免費的書籍推薦系統
 
 ## 📄 授權
 
-本專案僅供教育與研究用途。
+MIT License
 
----
+## 🙏 致謝
 
-**開發者**: 陳淨 | **課程**: 資訊安全 HW4 | **日期**: 2025-11
+- Google Books API
+- HuggingFace
+- LangChain
+- Streamlit
